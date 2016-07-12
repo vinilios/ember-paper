@@ -1,0 +1,10 @@
+{{#ember-native-scrollable 
+    content-size=_contentSize 
+    scroll-left=_scrollLeft 
+    scroll-top=_scrollTop 
+    scrollChange=(action "scrollChange") 
+    classNames="md-virtual-repeat-scroller"
+    clientSizeChange=(action "clientSizeChange")}}
+<div class="md-virtual-repeat-sizer"></div>
+{{ yield _cells }}
+{{/ember-native-scrollable}}
