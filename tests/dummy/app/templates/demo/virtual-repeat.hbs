@@ -1,0 +1,52 @@
+{{page-toolbar pageTitle="Virtual repeat" isDemo=true}}
+
+{{#doc-content}}
+  {{#paper-card}}
+  {{#paper-card-content}}
+    <h2>Basic Usage</h2>
+    
+    <div layout layout="row">
+    {{paper-slider flex=80 min=0 max=60000 value=itemsCount}}
+    <div flex="20" layout layout-align="center center">
+        {{input type="number" value=itemsCount}}
+    </div>
+    </div>
+
+    <h3>A list of {{ items.length }} items</h3>
+    {{#paper-virtual-repeat classNames="virtual-repeat-demo" items=items as |cells|}}
+        <ul>
+        {{#each cells as |cell|}}
+            {{#unless cell.hidden}}
+                <li auto-size >{{ cell.item.name }}</li>
+            {{/unless}}
+        {{/each}}
+        </ul>
+    {{/paper-virtual-repeat}}
+  {{/paper-card-content}}
+  {{/paper-card}}
+
+  {{#paper-card}}
+  {{#paper-card-content}}
+    <h2>Top index selection</h2>
+    
+    <div layout="row" flex-grow>
+        {{#paper-virtual-repeat flex=70 topIndex=selectedGroupIndex classNames="virtual-repeat-demo" items=groupedItems as |cells|}}
+            <ul>
+            {{#each cells as |cell|}}
+                {{#unless cell.hidden}}
+                    <li class="{{cell.item.class}}" auto-size >{{ cell.item.name }}</li>
+                {{/unless}}
+            {{/each}}
+            </ul>
+        {{/paper-virtual-repeat}}
+        {{#paper-select flex=true classNames="select-group layout-margin" value=selectedGroupIndex itemLabelCallback=groupLabel onChange=(action (mut selectedGroupIndex))}}
+            {{#each groupedItemsHeadings as |option|}}
+                {{#paper-option value=option.index}}
+                    {{ option.name }}
+                {{/paper-option}}
+            {{/each}}
+        {{/paper-select}}
+    </div>
+  {{/paper-card-content}}
+  {{/paper-card}}
+{{/doc-content}}
