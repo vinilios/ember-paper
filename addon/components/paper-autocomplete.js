@@ -131,6 +131,9 @@ export default Component.extend({
 
   modelDidChange: observer('model', function() {
     let model = this.get('model');
+    if (!model) {
+      return;
+    }
     let value = this.lookupLabelOfItem(model);
     // First set previousSearchText then searchText ( do not trigger observer only update value! ).
     this.set('previousSearchText', value);

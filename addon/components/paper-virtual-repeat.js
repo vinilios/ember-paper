@@ -163,6 +163,8 @@ export default EmberCollection.extend(ColorMixin, FlexMixin, {
   }),
 
   observeScrollTop: observer('_scrollTop', '_contentSize.height', function() {
+    if (!this.element) { return; }
+    this.listElement = this.element.firstElementChild.children[1];
     if (!this.listElement) {
       return;
     }
@@ -178,16 +180,11 @@ export default EmberCollection.extend(ColorMixin, FlexMixin, {
       numItems = items;
     }
     topTranslate = numItems * itemSize;
-    this.listElement.style.transform = `translateY(${topTranslate}px)`;
-  }),
-
-  didInsertElement() {
-    this.listElement = this.element.firstElementChild.children[1];
     this.listElement.style.position = 'absolute';
     this.listElement.style.top = 0;
     this.listElement.style.bottom = 0;
     this.listElement.style.left = 0;
     this.listElement.style.right = 0;
-  }
-
+    this.listElement.style.transform = `translateY(${topTranslate}px)`;
+  })
 });

@@ -39,6 +39,10 @@ export default Component.extend({
     this.sendAction('mouse-up');
   },
 
+  observeSuggestions: Ember.observer('suggestions.length', function() {
+    this.positionDropdown();
+  }),
+
   // TODO reafactor into a computed property that binds directly to dropdown's `style`
   positionDropdown() {
     let hrect  = Ember.$(`#${this.get('wrapToElementId')}`)[0].getBoundingClientRect();
@@ -53,30 +57,43 @@ export default Component.extend({
         minWidth: `${width}px`,
         maxWidth: `${Math.max(hrect.right - root.left, root.right - hrect.left) - MENU_PADDING}px`
       };
+
     let ul = this.$();
+    let sizer = ul.parent().find(".md-virtual-repeat-sizer");
+    let cont = ul.parent().parent();
+    let maxHeight;
 
     if (top > bot && root.height - hrect.bottom - MENU_PADDING < MAX_HEIGHT) {
       styles.top = 'auto';
       styles.bottom = `${bot}px`;
-      styles.maxHeight = `${Math.min(MAX_HEIGHT, hrect.top - root.top - MENU_PADDING)}px`;
+      maxHeight = Math.min(MAX_HEIGHT, hrect.top - root.top - MENU_PADDING);
     } else {
       styles.top = `${top}px`;
       styles.bottom = 'auto';
-      styles.maxHeight = `${Math.min(MAX_HEIGHT, root.bottom - hrect.bottom - MENU_PADDING)}px`;
+      maxHeight = Math.min(MAX_HEIGHT, root.bottom - hrect.bottom - MENU_PADDING);
     }
-    ul.css(styles);
+    styles.maxHeight = `${maxHeight}px`;
+    cont.css(styles);
     correctHorizontalAlignment();
+    
+    Ember.run.scheduleOnce('render', this, function() {
+      if (sizer.height() < maxHeight) {
+       cont.css({height: sizer.height()});
+      } else {
+       cont.css({height: maxHeight})
+      }
+    });
 
     /*
      * Makes sure that the menu doesn't go off of the screen on either side.
      */
     function correctHorizontalAlignment() {
-      let dropdown = ul[0].getBoundingClientRect();
+      let dropdown = cont[0].getBoundingClientRect();
       let styles = {};
       if (dropdown.right > root.right - MENU_PADDING) {
         styles.left = `${hrect.right - dropdown.width}px`;
       }
-      ul.css(styles);
+      cont.css(styles);
     }
   },
 
@@ -105,10 +122,6 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-
-    // TODO refactor using ember-wormhole?
-    let ul = this.$().detach();
-    Ember.$('body').append(ul);
     Ember.$(window).on('resize', this._resizeWindowEvent);
     this.get('util').disableScrollAround(this.$());
     this.positionDropdown();
