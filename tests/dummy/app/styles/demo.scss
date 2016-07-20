@@ -1372,3 +1372,32 @@ md-sidenav.site-sidenav {
   }
 
 }
+
+.virtual-repeat-demo {
+  border: 1px solid color('grey', '300');
+  height: 301px;
+  position: relative;
+  
+  ul {
+    list-style: none;
+    
+    li {
+      box-sizing: border-box;
+      padding: 10px 5px;
+      width: 100%;
+      margin: 0;
+      border-bottom: 1px solid color('grey', '300');
+    }
+
+    li:hover { background-color: color('grey', '100')}
+    li.selected { background-color: color('blue', '200')}
+
+    li.heading {
+      background-color: color($primary, '400');
+      color: color($primary, '50');
+      padding-left: 13px;
+      font-weight: bold;
+    }
+
+  }
+}
