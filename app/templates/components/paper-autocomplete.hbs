@@ -5,7 +5,7 @@
       label=placeholder
       focus-in="inputFocusIn"
       focus-out="inputFocusOut"
-      key-down="inputKeyDown"
+      onKeyDown=(action "inputKeyDown")
       value=searchText
       onChange=(action (mut searchText))
       disabled=disabled

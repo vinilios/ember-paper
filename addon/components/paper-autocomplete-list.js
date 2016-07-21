@@ -45,7 +45,11 @@ export default Component.extend({
 
   // TODO reafactor into a computed property that binds directly to dropdown's `style`
   positionDropdown() {
-    let hrect  = Ember.$(`#${this.get('wrapToElementId')}`)[0].getBoundingClientRect();
+    let wrapper = Ember.$(`#${this.get('wrapToElementId')}`)[0];
+    if (wrapper.firstElementChild.tagName.toLowerCase() == "md-input-container") {
+      wrapper = Ember.$(`#${this.get('wrapToElementId')}`).find("input")[0];
+    }
+    let hrect  = wrapper.getBoundingClientRect();
     let vrect  = hrect;
     let root   = document.body.getBoundingClientRect();
     let top    = vrect.bottom - root.top;
