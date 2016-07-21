@@ -46,10 +46,12 @@ export default Component.extend(EventsMixin, {
     if (!this.get('disabled') && !this.get('focusOnlyOnKey') || !this.get('pressed')) {
       this.set('focused', true);
     }
+    this.sendAction('focus-in');
   },
 
   focusOut() {
     this.set('focused', false);
+    this.sendAction('focus-out');
   },
 
   mouseEnter() {
