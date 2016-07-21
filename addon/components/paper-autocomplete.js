@@ -251,6 +251,10 @@ export default Component.extend({
   },
 
   actions: {
+    setText(value) {
+      this.set('searchText', value);
+    },
+
     clear() {
       this.set('searchText', '');
       this.set('selectedIndex', -1);
@@ -280,6 +284,8 @@ export default Component.extend({
     },
 
     inputKeyDown(value, event) {
+      if (event === undefined) { event = value; } // from paper-input
+      let handled = true;
       switch (event.keyCode) {
         case this.get('constants').KEYCODE.DOWN_ARROW:
           if (this.get('loading')) {
@@ -307,7 +313,12 @@ export default Component.extend({
           this.set('hidden', this.get('shouldHide'));
           break;
         default:
+          handled = false;
           break;
+      }
+      if (handled) {
+        event.preventDefault();
+        event.stopPropagation();
       }
     },
 
