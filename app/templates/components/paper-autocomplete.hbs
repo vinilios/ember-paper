@@ -44,18 +44,20 @@
       {{#paper-virtual-repeat classNames="md-autocomplete-suggestions-container" items=suggestions as |cells|}}
         {{#paper-autocomplete-list suggestions=suggestions selectedIndex=selectedIndex wrapToElementId=autocompleteWrapperId mouse-up="listMouseUp" mouse-leave="listMouseLeave" mouse-enter="listMouseEnter"}}
             {{#each cells as |cell index|}}
-              {{#paper-autocomplete-item lookupKey=lookupKey item=cell.item selectedIndex=selectedIndex index=index pick="pickModel" as |label|}}
-              {{!-- Render block template, then named component then default --}}
-                {{#if hasBlock}}
-                  {{yield searchText cell.item index}}
-                {{else}}
-                  {{#if itemComponent}}
-                    {{component itemComponent searchText=searchText label=label index=index item=cell.item}}
+              {{#unless cell.hidden}}
+                {{#paper-autocomplete-item lookupKey=lookupKey item=cell.item selectedIndex=selectedIndex index=index pick="pickModel" as |label|}}
+                {{!-- Render block template, then named component then default --}}
+                  {{#if hasBlock}}
+                    {{yield searchText cell.item index}}
                   {{else}}
-                    {{paper-autocomplete-highlight searchText=searchText label=label}}
+                    {{#if itemComponent}}
+                      {{component itemComponent searchText=searchText label=label index=index item=cell.item}}
+                    {{else}}
+                      {{paper-autocomplete-highlight searchText=searchText label=label}}
+                    {{/if}}
                   {{/if}}
-                {{/if}}
-              {{/paper-autocomplete-item}}
+                {{/paper-autocomplete-item}}
+              {{/unless}}
             {{else}}
               {{#if showLoadingBar}}
               {{!-- Render block template, then named component then default --}}
