@@ -45,7 +45,7 @@ export default Component.extend({
 
   // Internal
   hidden: true,
-  selectedIndex: 0,
+  selectedIndex: -1,
   messages: [],
   noBlur: false,
   hasFocus: false,
@@ -54,6 +54,13 @@ export default Component.extend({
   // isn't shared among autocomplete instances
   itemCache: computed(function() {
     return {};
+  }),
+
+  observeHidden: observer('hidden', function() {
+    if (this.get('hidden')) {
+      return this.enableWrapScroll && this.enableWrapScroll();
+    }
+    this.enableWrapScroll = this.disableElementScrollEvents(this.$());
   }),
 
   // Public
@@ -66,6 +73,7 @@ export default Component.extend({
   allowNonExisting: false,
   noCache: false,
   notFoundMessage: 'No matches found for \'%@\'.',
+  enableWrapScroll: null,
 
   init() {
     this._super(...arguments);
@@ -78,6 +86,16 @@ export default Component.extend({
 
   notFloating: computed.not('floating'),
   notHidden: computed.not('hidden'),
+
+  disableElementScrollEvents(el) {
+    let preventDefault = (e) => e.preventDefault();
+    el.on('wheel', preventDefault);
+    el.on('touchmove', preventDefault);
+    return () => {
+      el.off('wheel', preventDefault);
+      el.off('touchmove', preventDefault);
+    }
+  },
 
   autocompleteWrapperId: computed('elementId', function() {
     return `autocomplete-wrapper-${this.get('elementId')}`;
@@ -285,18 +303,21 @@ export default Component.extend({
 
     inputKeyDown(value, event) {
       if (event === undefined) { event = value; } // from paper-input
-      let handled = true;
       switch (event.keyCode) {
         case this.get('constants').KEYCODE.DOWN_ARROW:
           if (this.get('loading')) {
             return;
           }
+          event.stopPropagation();
+          event.preventDefault();
           this.set('selectedIndex', Math.min(this.get('selectedIndex') + 1, this.get('suggestions').length - 1));
           break;
         case this.get('constants').KEYCODE.UP_ARROW:
           if (this.get('loading')) {
             return;
           }
+          event.stopPropagation();
+          event.preventDefault();
           this.set('selectedIndex', this.get('selectedIndex') < 0 ? this.get('suggestions').length - 1 : Math.max(0, this.get('selectedIndex') - 1));
           break;
         case this.get('constants').KEYCODE.TAB:
@@ -304,22 +325,21 @@ export default Component.extend({
           if (this.get('hidden') || this.get('loading') || this.get('selectedIndex') < 0 || this.get('suggestions').length < 1) {
             return;
           }
-          this.send('pickModel', this.get('suggestions').objectAt(this.get('selectedIndex')));
+          event.stopPropagation();
+          event.preventDefault();
+          this.send('pickModel', this.get('suggestions').objectAt(Math.min(this.get('selectedIndex'), this.get('suggestions').length - 1)));
           break;
         case this.get('constants').KEYCODE.ESCAPE:
+          event.preventDefault();
           this.set('searchText', '');
           this.set('selectedIndex', this.get('defaultIndex'));
           this.set('model', null);
           this.set('hidden', this.get('shouldHide'));
           break;
         default:
-          handled = false;
           break;
       }
-      if (handled) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+      return true;
     },
 
     listMouseEnter() {
