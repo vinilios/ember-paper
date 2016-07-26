@@ -36,30 +36,28 @@
   {{/if}}
 
   {{#if loading}}
-    {{paper-progress-linear}}
+    {{paper-progress-linear class=(if floating 'md-inline' '')}}
   {{/if}}
 
   {{#ember-wormhole to="paper-wormhole"}}
     {{#if notHidden}}
-      {{#paper-virtual-repeat classNames="md-autocomplete-suggestions-container" items=suggestions as |cells|}}
-        {{#paper-autocomplete-list suggestions=suggestions selectedIndex=selectedIndex wrapToElementId=autocompleteWrapperId mouse-up="listMouseUp" mouse-leave="listMouseLeave" mouse-enter="listMouseEnter"}}
-            {{#each cells as |cell index|}}
-              {{#unless cell.hidden}}
-                {{#paper-autocomplete-item lookupKey=lookupKey item=cell.item selectedIndex=selectedIndex index=index pick="pickModel" as |label|}}
-                {{!-- Render block template, then named component then default --}}
-                  {{#if hasBlock}}
-                    {{yield searchText cell.item index}}
+      {{#paper-virtual-repeat classNames="md-autocomplete-suggestions-container" items=suggestions as |items|}}
+        {{#paper-autocomplete-list floating=floating suggestions=suggestions selectedIndex=selectedIndex wrapToElementId=autocompleteWrapperId mouse-up="listMouseUp" mouse-leave="listMouseLeave" mouse-enter="listMouseEnter"}}
+            {{#each items as |item index|}}
+              {{#paper-autocomplete-item lookupKey=lookupKey item=item selectedIndex=selectedIndex index=index pick="pickModel" as |label|}}
+              {{!-- Render block template, then named component then default --}}
+                {{#if hasBlock}}
+                  {{yield searchText item index}}
+                {{else}}
+                  {{#if itemComponent}}
+                    {{component itemComponent searchText=searchText label=label index=index item=item}}
                   {{else}}
-                    {{#if itemComponent}}
-                      {{component itemComponent searchText=searchText label=label index=index item=cell.item}}
-                    {{else}}
-                      {{paper-autocomplete-highlight searchText=searchText label=label}}
-                    {{/if}}
+                    {{paper-autocomplete-highlight searchText=searchText label=label}}
                   {{/if}}
-                {{/paper-autocomplete-item}}
-              {{/unless}}
-            {{else}}
-              {{#if showLoadingBar}}
+                {{/if}}
+              {{/paper-autocomplete-item}}
+            {{/each}}
+            {{#unless suggestions.length }}
               {{!-- Render block template, then named component then default --}}
                 {{#if hasBlock}}
                     <li>{{yield searchText to="inverse"}}</li>
@@ -70,8 +68,7 @@
                       <li>{{notFoundMsg}}</li>
                   {{/if}}
                 {{/if}}
-              {{/if}}
-            {{/each}}
+            {{/unless}}
         {{/paper-autocomplete-list}}
       {{/paper-virtual-repeat}}
     {{/if}}
