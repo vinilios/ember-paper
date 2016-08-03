@@ -10,6 +10,7 @@
       onChange=(action (mut searchText))
       disabled=disabled
       required=required
+      passThru=inputPassthru
       errors=errors
       flex=true}}
   {{else}}
@@ -22,6 +23,7 @@
       key-down="inputKeyDown"
       autocomplete="off"
       disabled=disabled
+      readonly=readonly
       required=required
       aria-haspopup=true
       aria-autocomplete="list"

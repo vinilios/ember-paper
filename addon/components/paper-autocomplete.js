@@ -65,6 +65,7 @@ export default Component.extend({
 
   // Public
   disabled: null,
+  readonly: null,
   required: null,
   lookupKey: null,
   placeholder: '',
@@ -114,7 +115,7 @@ export default Component.extend({
    * Needed because of false = disabled='false'.
    */
   showDisabled: computed('disabled', function() {
-    if (this.get('disabled')) {
+    if (this.get('disabled') || this.get('readonly')) {
       return true;
     }
   }),
@@ -268,6 +269,12 @@ export default Component.extend({
     return this.get('lookupKey') ? get(model, this.get('lookupKey')) : model;
   },
 
+  inputPassthru: computed('readonly', function() {
+    return {
+      'readonly': this.get('readonly')
+    };
+  }),
+
   actions: {
     setText(value) {
       this.set('searchText', value);
@@ -297,6 +304,7 @@ export default Component.extend({
     },
 
     inputFocusIn() {
+      if (!!this.get('readonly') || !!this.get('disabled')) { return; }
       this.set('hasFocus', true);
       this.set('hidden', this.get('shouldHide'));
     },
