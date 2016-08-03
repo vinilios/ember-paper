@@ -6,6 +6,6 @@
   {{paper-icon icon class=icon-class}}
 {{/if}}
 
-{{#paper-select-core placeholder=placeholder value=value disabled=disabled onChange=onChange getItems=getItems itemLabelCallback=itemLabelCallback cache=cache as |items|}}
+{{#paper-select-core placeholder=placeholder value=value disabled=disabled readonly=readonly onChange=onChange getItems=getItems itemLabelCallback=itemLabelCallback cache=cache as |items|}}
   {{yield items}}
 {{/paper-select-core}}
