@@ -35,7 +35,12 @@ export default BaseFocusable.extend(ColorMixin, FlexMixin, ChildMixin, {
   ],
   type: 'text',
   autofocus: false,
-  tabindex: null,
+  tabindex: computed('passThru.readonly', 'disabled', 'passThru.tabindex', function() {
+    if (!!this.get('passThru.readonly') || !!this.get('disabled')) {
+      return -1;
+    }
+    return this.get('passThru.tabindex') || null;
+  }),
   hideAllMessages: false,
   isTouched: false,
   lastIsInvalid: undefined,
