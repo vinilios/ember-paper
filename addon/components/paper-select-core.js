@@ -30,8 +30,8 @@ export default PaperMenuAbstract.extend({
   classNames: ['md-default-theme'],
 
   attributeBindings: ['tabindex', 'readonlyAttr:readonly', 'multipleAttr:multiple'],
-  tabindex: Ember.computed('readonly', function() {
-    return this.get('readonly') ? -1 : 0;
+  tabindex: Ember.computed('readonly', 'disabled', function() {
+    return this.get('readonly') || this.get('disabled') ? -1 : 0;
   }),
   readonly: null,
   multiple: null,
@@ -43,8 +43,8 @@ export default PaperMenuAbstract.extend({
     return this.get('multiple') ? 'multiple' : null;
   }),
 
-  preventMenuOpen: Ember.computed('disabled', function() {
-    return !!this.get('disabled');
+  preventMenuOpen: Ember.computed('disabled', 'readonly', function() {
+    return !!this.get('disabled') || !!this.get('readonly');
   }),
 
   label: Ember.computed('value', 'itemLabelCallback', function() {
