@@ -34,6 +34,7 @@ module.exports = {
       'core/style/mixins.scss',
       'core/style/variables.scss',
       'core/style/structure.scss',
+      'core/style/themes.scss',
       'core/services/layout/layout-attributes.scss',
       'core/services/layout/layout.scss',
       //component styles
