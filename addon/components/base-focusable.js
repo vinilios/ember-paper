@@ -20,7 +20,7 @@ export default Component.extend(EventsMixin, {
   hover: false,
 
   classNameBindings: ['focused:md-focused'],
-  attributeBindings: ['tabindex', 'disabledAttr:disabled'],
+  attributeBindings: ['tabindex', 'disabledAttr:disabled', 'autofocus'],
 
   disabledAttr: computed('disabled', function() {
     return this.get('disabled') ? 'disabled' : null;
