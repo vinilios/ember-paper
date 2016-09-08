@@ -106,6 +106,31 @@ let Util = Ember.Service.extend({
     method && method();
   },
 
+  getNode: function(el) {
+    return el[0] || el;
+  },
+
+  clientRect: function(element, offsetParent, isOffsetRect) {
+    var node = this.getNode(element);
+    offsetParent = this.getNode(offsetParent || node.offsetParent || document.body);
+    var nodeRect = node.getBoundingClientRect();
+
+    // The user can ask for an offsetRect: a rect relative to the offsetParent,
+    // or a clientRect: a rect relative to the page
+    var offsetRect = isOffsetRect ?
+      offsetParent.getBoundingClientRect() :
+    {left: 0, top: 0, width: 0, height: 0};
+    return {
+      left: nodeRect.left - offsetRect.left,
+      top: nodeRect.top - offsetRect.top,
+      width: nodeRect.width,
+      height: nodeRect.height
+    };
+  },
+
+  offsetRect: function(element, offsetParent) {
+    return this.clientRect(element, offsetParent, true);
+  },
   /*
    * supplant() method from Crockford's `Remedial Javascript`
    * Equivalent to use of $interpolate; without dependency on

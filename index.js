@@ -104,7 +104,10 @@ module.exports = {
       'components/dialog/dialog.scss',
       'components/dialog/dialog-theme.scss',
 
-      'components/virtualRepeat/virtual-repeater.scss'
+      'components/virtualRepeat/virtual-repeater.scss',
+
+      'components/tooltip/tooltip.scss',
+      'components/tooltip/tooltip-theme.scss'
     ];
 
     /*

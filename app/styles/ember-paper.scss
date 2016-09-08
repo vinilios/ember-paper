@@ -120,6 +120,9 @@
 
 @import './angular-material/components/virtualRepeat/virtual-repeater';
 
+@import './angular-material/components/tooltip/tooltip';
+@import './angular-material/components/tooltip/tooltip-theme';
+
 // Backports of features from future versions of angular-material-source to this version
 @import './backports/paper-input';
 
