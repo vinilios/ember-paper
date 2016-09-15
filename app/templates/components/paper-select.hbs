@@ -9,3 +9,25 @@
 {{#paper-select-core placeholder=placeholder value=value disabled=disabled readonly=readonly onChange=onChange getItems=getItems itemLabelCallback=itemLabelCallback cache=cache as |items|}}
   {{yield items}}
 {{/paper-select-core}}
+
+{{#unless hideAllMessages}}
+  <div class="md-errors-spacer">
+    {{#if maxlength}}
+      <div class="md-char-counter">{{renderCharCount}}</div>
+    {{/if}}
+  </div>
+  {{#if isInvalidAndTouched}}
+    <div class="md-input-messages-animation md-auto-hide" ng-messages>
+      {{#each validationErrorMessages as |error index|}}
+        <div id="error-{{inputElementId}}-{{index}}"
+        class="paper-input-error ng-enter ng-enter-active" ng-message>
+          {{error.message}}
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+{{/unless}}
+
+{{#if iconRight}}
+  {{paper-icon iconRight}}
+{{/if}}
